@@ -24,7 +24,7 @@ const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
 const sequelize_1 = __webpack_require__(5);
 const auth_module_1 = __webpack_require__(6);
-const blog_module_1 = __webpack_require__(17);
+const blog_module_1 = __webpack_require__(18);
 const blog_model_1 = __webpack_require__(12);
 const user_model_1 = __webpack_require__(10);
 let AppModule = class AppModule {
@@ -77,7 +77,7 @@ const sequelize_1 = __webpack_require__(5);
 const auth_controller_1 = __webpack_require__(8);
 const auth_service_1 = __webpack_require__(9);
 const user_model_1 = __webpack_require__(10);
-const jwt_strategy_1 = __webpack_require__(14);
+const jwt_strategy_1 = __webpack_require__(15);
 let AuthModule = class AuthModule {
 };
 exports.AuthModule = AuthModule;
@@ -108,12 +108,13 @@ module.exports = require("@nestjs/jwt");
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
-var _a;
+var _a, _b;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.AuthController = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
 const auth_service_1 = __webpack_require__(9);
+const create_user_dto_1 = __webpack_require__(14);
 let AuthController = class AuthController {
     constructor(authService) {
         this.authService = authService;
@@ -125,6 +126,9 @@ let AuthController = class AuthController {
         }
         return result;
     }
+    signUp(createUserDto) {
+        return this.authService.signUp(createUserDto);
+    }
 };
 exports.AuthController = AuthController;
 tslib_1.__decorate([
@@ -134,6 +138,13 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:paramtypes", [Object]),
     tslib_1.__metadata("design:returntype", Promise)
 ], AuthController.prototype, "signIn", null);
+tslib_1.__decorate([
+    (0, common_1.Post)('signup'),
+    tslib_1.__param(0, (0, common_1.Body)()),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [typeof (_b = typeof create_user_dto_1.CreateUserDto !== "undefined" && create_user_dto_1.CreateUserDto) === "function" ? _b : Object]),
+    tslib_1.__metadata("design:returntype", void 0)
+], AuthController.prototype, "signUp", null);
 exports.AuthController = AuthController = tslib_1.__decorate([
     (0, common_1.Controller)('auth'),
     tslib_1.__metadata("design:paramtypes", [typeof (_a = typeof auth_service_1.AuthService !== "undefined" && auth_service_1.AuthService) === "function" ? _a : Object])
@@ -169,6 +180,44 @@ let AuthService = class AuthService {
             };
         }
         return null;
+    }
+    async signUp(createUserDto) {
+        try {
+            // Check if user exists
+            const existingUser = await this.userModel.findOne({
+                where: { username: createUserDto.username },
+            });
+            if (existingUser) {
+                throw new common_1.ConflictException('Username already exists');
+            }
+            // Hash password
+            const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+            // Create new user
+            const user = await this.userModel.create({
+                username: createUserDto.username,
+                password: hashedPassword,
+                role: createUserDto.role || 'user',
+            });
+            // Generate JWT token
+            const token = this.jwtService.sign({
+                sub: user.id,
+                username: user.username,
+                role: user.role,
+            });
+            // Get user data without password
+            const userData = user.toJSON();
+            delete userData.password;
+            return {
+                user: userData,
+                token,
+            };
+        }
+        catch (error) {
+            if (error.name === 'SequelizeUniqueConstraintError') {
+                throw new common_1.ConflictException('Username already exists');
+            }
+            throw error;
+        }
     }
 };
 exports.AuthService = AuthService;
@@ -269,14 +318,26 @@ module.exports = require("bcrypt");
 
 /***/ }),
 /* 14 */
+/***/ ((__unused_webpack_module, exports) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CreateUserDto = void 0;
+class CreateUserDto {
+}
+exports.CreateUserDto = CreateUserDto;
+
+
+/***/ }),
+/* 15 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.JwtStrategy = void 0;
 const tslib_1 = __webpack_require__(4);
-const passport_jwt_1 = __webpack_require__(15);
-const passport_1 = __webpack_require__(16);
+const passport_jwt_1 = __webpack_require__(16);
+const passport_1 = __webpack_require__(17);
 const common_1 = __webpack_require__(1);
 let JwtStrategy = class JwtStrategy extends (0, passport_1.PassportStrategy)(passport_jwt_1.Strategy) {
     constructor() {
@@ -298,19 +359,19 @@ exports.JwtStrategy = JwtStrategy = tslib_1.__decorate([
 
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ ((module) => {
 
 module.exports = require("passport-jwt");
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ ((module) => {
 
 module.exports = require("@nestjs/passport");
 
 /***/ }),
-/* 17 */
+/* 18 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -319,8 +380,8 @@ exports.BlogModule = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
 const sequelize_1 = __webpack_require__(5);
-const blog_controller_1 = __webpack_require__(18);
-const blog_service_1 = __webpack_require__(20);
+const blog_controller_1 = __webpack_require__(19);
+const blog_service_1 = __webpack_require__(21);
 const blog_model_1 = __webpack_require__(12);
 let BlogModule = class BlogModule {
 };
@@ -335,7 +396,7 @@ exports.BlogModule = BlogModule = tslib_1.__decorate([
 
 
 /***/ }),
-/* 18 */
+/* 19 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -344,10 +405,10 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BlogController = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const jwt_auth_guard_1 = __webpack_require__(19);
-const blog_service_1 = __webpack_require__(20);
-const search_blog_dto_1 = __webpack_require__(22);
-const create_blog_dto_1 = __webpack_require__(23);
+const jwt_auth_guard_1 = __webpack_require__(20);
+const blog_service_1 = __webpack_require__(21);
+const search_blog_dto_1 = __webpack_require__(23);
+const create_blog_dto_1 = __webpack_require__(24);
 let BlogController = class BlogController {
     constructor(blogService) {
         this.blogService = blogService;
@@ -422,7 +483,7 @@ exports.BlogController = BlogController = tslib_1.__decorate([
 
 
 /***/ }),
-/* 19 */
+/* 20 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -430,7 +491,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.JwtAuthGuard = void 0;
 const tslib_1 = __webpack_require__(4);
 const common_1 = __webpack_require__(1);
-const passport_1 = __webpack_require__(16);
+const passport_1 = __webpack_require__(17);
 let JwtAuthGuard = class JwtAuthGuard extends (0, passport_1.AuthGuard)('jwt') {
 };
 exports.JwtAuthGuard = JwtAuthGuard;
@@ -440,7 +501,7 @@ exports.JwtAuthGuard = JwtAuthGuard = tslib_1.__decorate([
 
 
 /***/ }),
-/* 20 */
+/* 21 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
@@ -451,7 +512,7 @@ const common_1 = __webpack_require__(1);
 const sequelize_1 = __webpack_require__(5);
 const blog_model_1 = __webpack_require__(12);
 const user_model_1 = __webpack_require__(10);
-const sequelize_2 = __webpack_require__(21);
+const sequelize_2 = __webpack_require__(22);
 let BlogService = class BlogService {
     constructor(blogModel) {
         this.blogModel = blogModel;
@@ -550,13 +611,13 @@ exports.BlogService = BlogService = tslib_1.__decorate([
 
 
 /***/ }),
-/* 21 */
+/* 22 */
 /***/ ((module) => {
 
 module.exports = require("sequelize");
 
 /***/ }),
-/* 22 */
+/* 23 */
 /***/ ((__unused_webpack_module, exports) => {
 
 
@@ -568,7 +629,7 @@ exports.SearchBlogDto = SearchBlogDto;
 
 
 /***/ }),
-/* 23 */
+/* 24 */
 /***/ ((__unused_webpack_module, exports) => {
 
 

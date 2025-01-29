@@ -1,9 +1,10 @@
 import { Controller, Post, Body, UnauthorizedException } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { CreateUserDto } from './dtos/create-user.dto';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('signin')
   async signIn(
@@ -19,5 +20,10 @@ export class AuthController {
     }
     
     return result;
+  }
+
+  @Post('signup')
+  signUp(@Body() createUserDto: CreateUserDto) {
+    return this.authService.signUp(createUserDto);
   }
 } 
