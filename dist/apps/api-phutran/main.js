@@ -622,7 +622,7 @@ const core_1 = __webpack_require__(2);
 const app_module_1 = __webpack_require__(3);
 async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
-    const globalPrefix = 'api';
+    const globalPrefix = '';
     app.setGlobalPrefix(globalPrefix);
     const port = process.env.PORT || 3000;
     await app.listen(port);
