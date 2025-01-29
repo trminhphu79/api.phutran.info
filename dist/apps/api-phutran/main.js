@@ -702,7 +702,7 @@ let AppController = class AppController {
           <div class="container">
               <h1>Welcome to Phú Trần's API</h1>
               <p>Hello guys, Welcome to my API!</p>
-              <p class="signature">You don't know what you do, but I know what I do - Phú Trần (Michael Tran)</p>
+              <p class="signature">Let's make our life better than yesterday - Phú Trần (Michael Tran)</p>
               <img priority="high" src="https://phutran.info.vn/assets/logotmp.jpg" style="width: 400px; height: auto; border-radius: 10px; margin-top: 20px;" />
           </div>
       </body>
