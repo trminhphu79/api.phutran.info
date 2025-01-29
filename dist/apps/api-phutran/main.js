@@ -27,6 +27,7 @@ const auth_module_1 = __webpack_require__(6);
 const blog_module_1 = __webpack_require__(18);
 const blog_model_1 = __webpack_require__(12);
 const user_model_1 = __webpack_require__(10);
+const app_controller_1 = __webpack_require__(25);
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -47,6 +48,7 @@ exports.AppModule = AppModule = tslib_1.__decorate([
             auth_module_1.AuthModule,
             blog_module_1.BlogModule,
         ],
+        controllers: [app_controller_1.AppController],
     })
 ], AppModule);
 
@@ -638,6 +640,87 @@ exports.CreateBlogDto = void 0;
 class CreateBlogDto {
 }
 exports.CreateBlogDto = CreateBlogDto;
+
+
+/***/ }),
+/* 25 */
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.AppController = void 0;
+const tslib_1 = __webpack_require__(4);
+const common_1 = __webpack_require__(1);
+let AppController = class AppController {
+    getHello() {
+        return `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+          <meta charset="UTF-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Welcome to Phú Trần's API</title>
+          <style>
+              body {
+                  font-family: 'Arial', sans-serif;
+                  line-height: 1.6;
+                  max-width: 800px;
+                  margin: 0 auto;
+                  padding: 20px;
+                  background-color: #f5f5f5;
+              }
+              .container {
+                  background-color: white;
+                  padding: 30px;
+                  border-radius: 10px;
+                  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                  margin-top: 50px;
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  justify-content: center;
+              }
+              h1 {
+                  color: #2c3e50;
+                  text-align: center;
+                  margin-bottom: 20px;
+              }
+              p {
+                  color: #34495e;
+                  text-align: center;
+                  font-size: 1.2em;
+              }
+              .signature {
+                  font-style: italic;
+                  color: #7f8c8d;
+                  text-align: right;
+                  margin-top: 30px;
+              }
+          </style>
+      </head>
+      <body>
+          <div class="container">
+              <h1>Welcome to Phú Trần's API</h1>
+              <p>Hello guys, Welcome to my API!</p>
+              <p class="signature">You don't know what you do, but I know what I do - Phú Trần (Michael Tran)</p>
+              <img priority="high" src="https://phutran.info.vn/assets/logotmp.jpg" style="width: 400px; height: auto; border-radius: 10px; margin-top: 20px;" />
+          </div>
+      </body>
+      </html>
+    `;
+    }
+};
+exports.AppController = AppController;
+tslib_1.__decorate([
+    (0, common_1.Get)(),
+    (0, common_1.Header)('Content-Type', 'text/html'),
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", []),
+    tslib_1.__metadata("design:returntype", String)
+], AppController.prototype, "getHello", null);
+exports.AppController = AppController = tslib_1.__decorate([
+    (0, common_1.Controller)()
+], AppController);
 
 
 /***/ })
