@@ -1,7 +1,7 @@
 {
-  "name": "phutran.info",
+  "name": "api-phutran",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/phutran.info/src",
+  "sourceRoot": "apps/api-phutran/src",
   "projectType": "application",
   "tags": [],
   "targets": {
@@ -22,15 +22,15 @@
       "defaultConfiguration": "development",
       "dependsOn": ["build"],
       "options": {
-        "buildTarget": "phutran.info:build",
+        "buildTarget": "api-phutran:build",
         "runBuildTargetDependencies": false
       },
       "configurations": {
         "development": {
-          "buildTarget": "phutran.info:build:development"
+          "buildTarget": "api-phutran:build:development"
         },
         "production": {
-          "buildTarget": "phutran.info:build:production"
+          "buildTarget": "api-phutran:build:production"
         }
       }
     },
