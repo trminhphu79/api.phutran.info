@@ -44,7 +44,7 @@ export class AuthService {
       const user = await this.userModel.create({
         username: createUserDto.username,
         password: hashedPassword,
-        role: createUserDto.role || 'user',
+        role: 'user',
       });
 
       // Generate JWT token

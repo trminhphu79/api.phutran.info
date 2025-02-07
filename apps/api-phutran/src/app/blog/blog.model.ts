@@ -13,7 +13,10 @@ export class Blog extends Model {
   @Column
   title: string;
 
-  @Column
+  @Column({
+    type: DataType.TEXT('medium'),
+    allowNull: false,
+  })
   content: string;
 
   @Column({

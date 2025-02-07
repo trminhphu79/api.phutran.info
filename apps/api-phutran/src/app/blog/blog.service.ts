@@ -47,11 +47,20 @@ export class BlogService {
 
   async search(searchDto: SearchBlogDto) {
     const { keyword, offset, limit } = searchDto;
+    const trimmedKeyword = keyword.trim();
     const blogs = await this.blogModel.findAndCountAll({
       where: {
         [Op.or]: [
-          { title: { [Op.like]: `%${keyword}%` } },
-          { tag: { [Op.like]: `%${keyword}%` } },
+          {
+            title: {
+              [Op.iLike]: `%${trimmedKeyword}%`,
+            },
+          },
+          {
+            tag: {
+              [Op.overlap]: [trimmedKeyword],
+            },
+          },
         ],
       },
       offset,
