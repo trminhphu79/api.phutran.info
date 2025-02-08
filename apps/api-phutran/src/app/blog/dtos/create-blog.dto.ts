@@ -47,4 +47,20 @@ export class CreateBlogDto {
   @IsString()
   @IsNotEmpty()
   thumbnail: string;
+
+  @ApiProperty({
+    description: 'Description of the blog post',
+    example: 'This is the description of my blog post...',
+  })
+  @IsString()
+  @IsNotEmpty()
+  description: string;
+
+  @ApiProperty({
+    description: 'Slug of the blog post',
+    example: 'my-first-blog-post',
+  })
+  @IsString()
+  @IsNotEmpty()
+  slug: string;
 }

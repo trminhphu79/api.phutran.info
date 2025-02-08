@@ -8,7 +8,14 @@ import {
   Param,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiTags, ApiOperation, ApiResponse, ApiParam, ApiBody } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiParam,
+  ApiBody,
+} from '@nestjs/swagger';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { BlogService } from './blog.service';
 import { SearchBlogDto } from './dtos/search-blog.dto';
@@ -24,13 +31,14 @@ export class BlogController {
   constructor(private readonly blogService: BlogService) {}
 
   @Post()
-  @ApiOperation({ 
+  @ApiOperation({
     summary: 'Create a new blog post',
-    description: 'Creates a new blog post with the provided title, content, and tags'
+    description:
+      'Creates a new blog post with the provided title, content, and tags',
   })
   @ApiBody({ type: CreateBlogDto })
-  @ApiResponse({ 
-    status: 201, 
+  @ApiResponse({
+    status: 201,
     description: 'Blog post created successfully',
     schema: {
       type: 'object',
@@ -41,19 +49,19 @@ export class BlogController {
             id: { type: 'number', example: 1 },
             title: { type: 'string', example: 'My First Blog Post' },
             content: { type: 'string', example: 'This is the content...' },
-            tag: { 
+            tag: {
               type: 'array',
               items: { type: 'string' },
-              example: ['technology', 'programming']
+              example: ['technology', 'programming'],
             },
             authorId: { type: 'number', example: 1 },
             createdAt: { type: 'string', format: 'date-time' },
-            updatedAt: { type: 'string', format: 'date-time' }
-          }
+            updatedAt: { type: 'string', format: 'date-time' },
+          },
         },
-        message: { type: 'string', example: 'Blog created successfully' }
-      }
-    }
+        message: { type: 'string', example: 'Blog created successfully' },
+      },
+    },
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   create(@Body() createBlogDto: CreateBlogDto) {
@@ -62,12 +70,12 @@ export class BlogController {
 
   @Public()
   @Get()
-  @ApiOperation({ 
+  @ApiOperation({
     summary: 'Get all blog posts',
-    description: 'Retrieves all blog posts with their authors\' information'
+    description: "Retrieves all blog posts with their authors' information",
   })
-  @ApiResponse({ 
-    status: 200, 
+  @ApiResponse({
+    status: 200,
     description: 'Returns all blog posts',
     schema: {
       type: 'object',
@@ -80,10 +88,10 @@ export class BlogController {
               id: { type: 'number', example: 1 },
               title: { type: 'string', example: 'My Blog Post' },
               content: { type: 'string', example: 'Content...' },
-              tag: { 
+              tag: {
                 type: 'array',
                 items: { type: 'string' },
-                example: ['technology', 'programming']
+                example: ['technology', 'programming'],
               },
               authorId: { type: 'number', example: 1 },
               createdAt: { type: 'string', format: 'date-time' },
@@ -92,15 +100,15 @@ export class BlogController {
                 type: 'object',
                 properties: {
                   id: { type: 'number', example: 1 },
-                  username: { type: 'string', example: 'johndoe' }
-                }
-              }
-            }
-          }
+                  username: { type: 'string', example: 'johndoe' },
+                },
+              },
+            },
+          },
         },
-        message: { type: 'string', example: 'Blogs fetched successfully' }
-      }
-    }
+        message: { type: 'string', example: 'Blogs fetched successfully' },
+      },
+    },
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   findAll() {
@@ -109,13 +117,14 @@ export class BlogController {
 
   @Public()
   @Post('search')
-  @ApiOperation({ 
+  @ApiOperation({
     summary: 'Search blog posts',
-    description: 'Search blog posts by keyword in title and tags with pagination'
+    description:
+      'Search blog posts by keyword in title and tags with pagination',
   })
   @ApiBody({ type: SearchBlogDto })
-  @ApiResponse({ 
-    status: 200, 
+  @ApiResponse({
+    status: 200,
     description: 'Returns matching blog posts with pagination info',
     schema: {
       type: 'object',
@@ -128,22 +137,22 @@ export class BlogController {
               id: { type: 'number', example: 1 },
               title: { type: 'string', example: 'My Blog Post' },
               content: { type: 'string', example: 'Content...' },
-              tag: { 
+              tag: {
                 type: 'array',
                 items: { type: 'string' },
-                example: ['technology', 'programming']
+                example: ['technology', 'programming'],
               },
               authorId: { type: 'number', example: 1 },
               createdAt: { type: 'string', format: 'date-time' },
-              updatedAt: { type: 'string', format: 'date-time' }
-            }
-          }
+              updatedAt: { type: 'string', format: 'date-time' },
+            },
+          },
         },
         total: { type: 'number', example: 10 },
         offset: { type: 'number', example: 0 },
-        limit: { type: 'number', example: 10 }
-      }
-    }
+        limit: { type: 'number', example: 10 },
+      },
+    },
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   search(@Body() searchDto: SearchBlogDto) {
@@ -152,13 +161,14 @@ export class BlogController {
 
   @Public()
   @Get(':id')
-  @ApiOperation({ 
+  @ApiOperation({
     summary: 'Get a blog post by ID',
-    description: 'Retrieves a specific blog post by its ID with author information'
+    description:
+      'Retrieves a specific blog post by its ID with author information',
   })
   @ApiParam({ name: 'id', description: 'Blog post ID', example: 1 })
-  @ApiResponse({ 
-    status: 200, 
+  @ApiResponse({
+    status: 200,
     description: 'Returns the blog post',
     schema: {
       type: 'object',
@@ -169,10 +179,10 @@ export class BlogController {
             id: { type: 'number', example: 1 },
             title: { type: 'string', example: 'My Blog Post' },
             content: { type: 'string', example: 'Content...' },
-            tag: { 
+            tag: {
               type: 'array',
               items: { type: 'string' },
-              example: ['technology', 'programming']
+              example: ['technology', 'programming'],
             },
             authorId: { type: 'number', example: 1 },
             createdAt: { type: 'string', format: 'date-time' },
@@ -181,40 +191,42 @@ export class BlogController {
               type: 'object',
               properties: {
                 id: { type: 'number', example: 1 },
-                username: { type: 'string', example: 'johndoe' }
-              }
-            }
-          }
-        }
-      }
-    }
+                username: { type: 'string', example: 'johndoe' },
+              },
+            },
+          },
+        },
+      },
+    },
   })
-  @ApiResponse({ 
-    status: 404, 
+  @ApiResponse({
+    status: 404,
     description: 'Blog post not found',
     schema: {
       type: 'object',
       properties: {
         message: { type: 'string', example: 'Blog with ID 1 not found' },
         error: { type: 'string', example: 'Not Found' },
-        statusCode: { type: 'number', example: 404 }
-      }
-    }
+        statusCode: { type: 'number', example: 404 },
+      },
+    },
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  findOne(@Param('id') id: string) {
-    return this.blogService.findOne(+id);
+  @Public()
+  @Get(':id')
+  findOneById(@Param('id') id: string) {
+    return this.blogService.findOne(id);
   }
 
   @Put(':id')
-  @ApiOperation({ 
+  @ApiOperation({
     summary: 'Update a blog post',
-    description: 'Updates an existing blog post with the provided data'
+    description: 'Updates an existing blog post with the provided data',
   })
   @ApiParam({ name: 'id', description: 'Blog post ID', example: 1 })
   @ApiBody({ type: UpdateBlogDto })
-  @ApiResponse({ 
-    status: 200, 
+  @ApiResponse({
+    status: 200,
     description: 'Blog post updated successfully',
     schema: {
       type: 'object',
@@ -225,31 +237,31 @@ export class BlogController {
             id: { type: 'number', example: 1 },
             title: { type: 'string', example: 'Updated Blog Post' },
             content: { type: 'string', example: 'Updated content...' },
-            tag: { 
+            tag: {
               type: 'array',
               items: { type: 'string' },
-              example: ['technology', 'programming']
+              example: ['technology', 'programming'],
             },
             authorId: { type: 'number', example: 1 },
             createdAt: { type: 'string', format: 'date-time' },
-            updatedAt: { type: 'string', format: 'date-time' }
-          }
+            updatedAt: { type: 'string', format: 'date-time' },
+          },
         },
-        message: { type: 'string', example: 'Blog updated successfully' }
-      }
-    }
+        message: { type: 'string', example: 'Blog updated successfully' },
+      },
+    },
   })
-  @ApiResponse({ 
-    status: 404, 
+  @ApiResponse({
+    status: 404,
     description: 'Blog post not found',
     schema: {
       type: 'object',
       properties: {
         message: { type: 'string', example: 'Blog with ID 1 not found' },
         error: { type: 'string', example: 'Not Found' },
-        statusCode: { type: 'number', example: 404 }
-      }
-    }
+        statusCode: { type: 'number', example: 404 },
+      },
+    },
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   update(@Param('id') id: string, @Body() updateBlogDto: UpdateBlogDto) {
@@ -257,32 +269,32 @@ export class BlogController {
   }
 
   @Delete(':id')
-  @ApiOperation({ 
+  @ApiOperation({
     summary: 'Delete a blog post',
-    description: 'Deletes a blog post by its ID'
+    description: 'Deletes a blog post by its ID',
   })
   @ApiParam({ name: 'id', description: 'Blog post ID', example: 1 })
-  @ApiResponse({ 
-    status: 200, 
+  @ApiResponse({
+    status: 200,
     description: 'Blog post deleted successfully',
     schema: {
       type: 'object',
       properties: {
-        message: { type: 'string', example: 'Blog deleted successfully' }
-      }
-    }
+        message: { type: 'string', example: 'Blog deleted successfully' },
+      },
+    },
   })
-  @ApiResponse({ 
-    status: 404, 
+  @ApiResponse({
+    status: 404,
     description: 'Blog post not found',
     schema: {
       type: 'object',
       properties: {
         message: { type: 'string', example: 'Blog with ID 1 not found' },
         error: { type: 'string', example: 'Not Found' },
-        statusCode: { type: 'number', example: 404 }
-      }
-    }
+        statusCode: { type: 'number', example: 404 },
+      },
+    },
   })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   remove(@Param('id') id: string) {

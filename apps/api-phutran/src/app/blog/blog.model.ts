@@ -7,6 +7,7 @@ import {
   DataType,
 } from 'sequelize-typescript';
 import { User } from '../auth/user.model';
+import { IsNotEmpty } from 'class-validator';
 
 @Table
 export class Blog extends Model {
@@ -30,4 +31,17 @@ export class Blog extends Model {
 
   @BelongsTo(() => User)
   author: User;
+
+  @Column
+  thumbnail: string;
+
+  @Column({
+    type: DataType.TEXT('tiny'),
+  })
+  @IsNotEmpty()
+  description: string;
+
+  @Column
+  @IsNotEmpty()
+  slug: string;
 }

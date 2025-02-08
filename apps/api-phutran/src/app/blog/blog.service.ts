@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Blog } from './blog.model';
 import { User } from '../auth/user.model';
@@ -6,6 +10,7 @@ import { CreateBlogDto } from './dtos/create-blog.dto';
 import { SearchBlogDto } from './dtos/search-blog.dto';
 import { Op } from 'sequelize';
 import { UpdateBlogDto } from './dtos/update-blog.dto';
+import { FindBlogDto } from './dtos/find-blog.dto';
 
 @Injectable()
 export class BlogService {
@@ -77,9 +82,11 @@ export class BlogService {
     };
   }
 
-  async findOne(id: number) {
+  async findOne(slug: string) {
+    const isNumber = !isNaN(+slug);
+
     const blog = await this.blogModel.findOne({
-      where: { id },
+      where: isNumber ? { id: +slug } : { slug },
       include: [
         {
           model: User,
@@ -89,7 +96,7 @@ export class BlogService {
     });
 
     if (!blog) {
-      throw new NotFoundException(`Blog with ID ${id} not found`);
+      throw new NotFoundException(`Blog with slug ${slug} not found`);
     }
 
     return {
