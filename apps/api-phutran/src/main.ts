@@ -14,16 +14,11 @@ async function bootstrap() {
   const globalPrefix = '';
   app.setGlobalPrefix(globalPrefix);
 
-  // Enable CORS with specific origins
+  // Enable CORS for all origins
   app.enableCors({
-    origin: [
-      'https://phutran.info.vn',
-      'https://api.phutran.info.vn',
-      'http://localhost:4200'
-    ],
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
-    allowedHeaders: ['DNT', 'User-Agent', 'X-Requested-With', 'If-Modified-Since', 'Cache-Control', 'Content-Type', 'Range', 'Authorization'],
-    exposedHeaders: ['Content-Length', 'Content-Range'],
+    origin: true,
+    methods: '*',
+    allowedHeaders: '*',
     credentials: true,
   });
 
