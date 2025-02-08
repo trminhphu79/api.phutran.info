@@ -14,12 +14,13 @@ async function bootstrap() {
   const globalPrefix = '';
   app.setGlobalPrefix(globalPrefix);
 
-  // Enable CORS for all origins
+  // Enable CORS with most permissive settings
   app.enableCors({
-    origin: true,
-    methods: '*',
+    origin: '*',
+    methods: 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS',
     allowedHeaders: '*',
-    credentials: true,
+    exposedHeaders: '*',
+    credentials: false,  // Changed to false since we're using origin: '*'
   });
 
   // Add this line to enable validation
