@@ -1491,16 +1491,16 @@ async function bootstrap() {
     const app = await core_1.NestFactory.create(app_module_1.AppModule);
     const globalPrefix = '';
     app.setGlobalPrefix(globalPrefix);
-    // Enable CORS
+    // Enable CORS with specific origins
     app.enableCors({
         origin: [
             'https://phutran.info.vn',
-            'https://www.phutran.info.vn',
             'https://api.phutran.info.vn',
-            'http://localhost:4200',
+            'http://localhost:4200'
         ],
-        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-        allowedHeaders: ['Content-Type', 'Authorization'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+        allowedHeaders: ['DNT', 'User-Agent', 'X-Requested-With', 'If-Modified-Since', 'Cache-Control', 'Content-Type', 'Range', 'Authorization'],
+        exposedHeaders: ['Content-Length', 'Content-Range'],
         credentials: true,
     });
     // Add this line to enable validation
