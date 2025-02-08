@@ -133,7 +133,7 @@ const tslib_1 = __webpack_require__(5);
 const common_1 = __webpack_require__(1);
 const swagger_1 = __webpack_require__(3);
 const auth_service_1 = __webpack_require__(10);
-const create_user_dto_1 = __webpack_require__(15);
+const create_user_dto_1 = __webpack_require__(16);
 const public_decorator_1 = __webpack_require__(17);
 let AuthController = class AuthController {
     constructor(authService) {
@@ -239,7 +239,7 @@ const common_1 = __webpack_require__(1);
 const jwt_1 = __webpack_require__(8);
 const sequelize_1 = __webpack_require__(6);
 const user_model_1 = __webpack_require__(11);
-const bcrypt = tslib_1.__importStar(__webpack_require__(14));
+const bcrypt = tslib_1.__importStar(__webpack_require__(15));
 let AuthService = class AuthService {
     constructor(userModel, jwtService) {
         this.userModel = userModel;
@@ -354,6 +354,7 @@ exports.Blog = void 0;
 const tslib_1 = __webpack_require__(5);
 const sequelize_typescript_1 = __webpack_require__(12);
 const user_model_1 = __webpack_require__(11);
+const class_validator_1 = __webpack_require__(14);
 let Blog = class Blog extends sequelize_typescript_1.Model {
 };
 exports.Blog = Blog;
@@ -383,6 +384,22 @@ tslib_1.__decorate([
     (0, sequelize_typescript_1.BelongsTo)(() => user_model_1.User),
     tslib_1.__metadata("design:type", typeof (_a = typeof user_model_1.User !== "undefined" && user_model_1.User) === "function" ? _a : Object)
 ], Blog.prototype, "author", void 0);
+tslib_1.__decorate([
+    sequelize_typescript_1.Column,
+    tslib_1.__metadata("design:type", String)
+], Blog.prototype, "thumbnail", void 0);
+tslib_1.__decorate([
+    (0, sequelize_typescript_1.Column)({
+        type: sequelize_typescript_1.DataType.TEXT('tiny'),
+    }),
+    (0, class_validator_1.IsNotEmpty)(),
+    tslib_1.__metadata("design:type", String)
+], Blog.prototype, "description", void 0);
+tslib_1.__decorate([
+    sequelize_typescript_1.Column,
+    (0, class_validator_1.IsNotEmpty)(),
+    tslib_1.__metadata("design:type", String)
+], Blog.prototype, "slug", void 0);
 exports.Blog = Blog = tslib_1.__decorate([
     sequelize_typescript_1.Table
 ], Blog);
@@ -392,17 +409,23 @@ exports.Blog = Blog = tslib_1.__decorate([
 /* 14 */
 /***/ ((module) => {
 
-module.exports = require("bcrypt");
+module.exports = require("class-validator");
 
 /***/ }),
 /* 15 */
+/***/ ((module) => {
+
+module.exports = require("bcrypt");
+
+/***/ }),
+/* 16 */
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CreateUserDto = void 0;
 const tslib_1 = __webpack_require__(5);
-const class_validator_1 = __webpack_require__(16);
+const class_validator_1 = __webpack_require__(14);
 const swagger_1 = __webpack_require__(3);
 class CreateUserDto {
 }
@@ -440,12 +463,6 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:type", String)
 ], CreateUserDto.prototype, "password", void 0);
 
-
-/***/ }),
-/* 16 */
-/***/ ((module) => {
-
-module.exports = require("class-validator");
 
 /***/ }),
 /* 17 */
@@ -593,8 +610,8 @@ let BlogController = class BlogController {
     search(searchDto) {
         return this.blogService.search(searchDto);
     }
-    findOne(id) {
-        return this.blogService.findOne(+id);
+    findOneById(id) {
+        return this.blogService.findOne(id);
     }
     update(id, updateBlogDto) {
         return this.blogService.update(+id, updateBlogDto);
@@ -608,7 +625,7 @@ tslib_1.__decorate([
     (0, common_1.Post)(),
     (0, swagger_1.ApiOperation)({
         summary: 'Create a new blog post',
-        description: 'Creates a new blog post with the provided title, content, and tags'
+        description: 'Creates a new blog post with the provided title, content, and tags',
     }),
     (0, swagger_1.ApiBody)({ type: create_blog_dto_1.CreateBlogDto }),
     (0, swagger_1.ApiResponse)({
@@ -626,16 +643,16 @@ tslib_1.__decorate([
                         tag: {
                             type: 'array',
                             items: { type: 'string' },
-                            example: ['technology', 'programming']
+                            example: ['technology', 'programming'],
                         },
                         authorId: { type: 'number', example: 1 },
                         createdAt: { type: 'string', format: 'date-time' },
-                        updatedAt: { type: 'string', format: 'date-time' }
-                    }
+                        updatedAt: { type: 'string', format: 'date-time' },
+                    },
                 },
-                message: { type: 'string', example: 'Blog created successfully' }
-            }
-        }
+                message: { type: 'string', example: 'Blog created successfully' },
+            },
+        },
     }),
     (0, swagger_1.ApiResponse)({ status: 401, description: 'Unauthorized' }),
     tslib_1.__param(0, (0, common_1.Body)()),
@@ -648,7 +665,7 @@ tslib_1.__decorate([
     (0, common_1.Get)(),
     (0, swagger_1.ApiOperation)({
         summary: 'Get all blog posts',
-        description: 'Retrieves all blog posts with their authors\' information'
+        description: "Retrieves all blog posts with their authors' information",
     }),
     (0, swagger_1.ApiResponse)({
         status: 200,
@@ -667,7 +684,7 @@ tslib_1.__decorate([
                             tag: {
                                 type: 'array',
                                 items: { type: 'string' },
-                                example: ['technology', 'programming']
+                                example: ['technology', 'programming'],
                             },
                             authorId: { type: 'number', example: 1 },
                             createdAt: { type: 'string', format: 'date-time' },
@@ -676,15 +693,15 @@ tslib_1.__decorate([
                                 type: 'object',
                                 properties: {
                                     id: { type: 'number', example: 1 },
-                                    username: { type: 'string', example: 'johndoe' }
-                                }
-                            }
-                        }
-                    }
+                                    username: { type: 'string', example: 'johndoe' },
+                                },
+                            },
+                        },
+                    },
                 },
-                message: { type: 'string', example: 'Blogs fetched successfully' }
-            }
-        }
+                message: { type: 'string', example: 'Blogs fetched successfully' },
+            },
+        },
     }),
     (0, swagger_1.ApiResponse)({ status: 401, description: 'Unauthorized' }),
     tslib_1.__metadata("design:type", Function),
@@ -696,7 +713,7 @@ tslib_1.__decorate([
     (0, common_1.Post)('search'),
     (0, swagger_1.ApiOperation)({
         summary: 'Search blog posts',
-        description: 'Search blog posts by keyword in title and tags with pagination'
+        description: 'Search blog posts by keyword in title and tags with pagination',
     }),
     (0, swagger_1.ApiBody)({ type: search_blog_dto_1.SearchBlogDto }),
     (0, swagger_1.ApiResponse)({
@@ -716,19 +733,19 @@ tslib_1.__decorate([
                             tag: {
                                 type: 'array',
                                 items: { type: 'string' },
-                                example: ['technology', 'programming']
+                                example: ['technology', 'programming'],
                             },
                             authorId: { type: 'number', example: 1 },
                             createdAt: { type: 'string', format: 'date-time' },
-                            updatedAt: { type: 'string', format: 'date-time' }
-                        }
-                    }
+                            updatedAt: { type: 'string', format: 'date-time' },
+                        },
+                    },
                 },
                 total: { type: 'number', example: 10 },
                 offset: { type: 'number', example: 0 },
-                limit: { type: 'number', example: 10 }
-            }
-        }
+                limit: { type: 'number', example: 10 },
+            },
+        },
     }),
     (0, swagger_1.ApiResponse)({ status: 401, description: 'Unauthorized' }),
     tslib_1.__param(0, (0, common_1.Body)()),
@@ -741,7 +758,7 @@ tslib_1.__decorate([
     (0, common_1.Get)(':id'),
     (0, swagger_1.ApiOperation)({
         summary: 'Get a blog post by ID',
-        description: 'Retrieves a specific blog post by its ID with author information'
+        description: 'Retrieves a specific blog post by its ID with author information',
     }),
     (0, swagger_1.ApiParam)({ name: 'id', description: 'Blog post ID', example: 1 }),
     (0, swagger_1.ApiResponse)({
@@ -759,7 +776,7 @@ tslib_1.__decorate([
                         tag: {
                             type: 'array',
                             items: { type: 'string' },
-                            example: ['technology', 'programming']
+                            example: ['technology', 'programming'],
                         },
                         authorId: { type: 'number', example: 1 },
                         createdAt: { type: 'string', format: 'date-time' },
@@ -768,13 +785,13 @@ tslib_1.__decorate([
                             type: 'object',
                             properties: {
                                 id: { type: 'number', example: 1 },
-                                username: { type: 'string', example: 'johndoe' }
-                            }
-                        }
-                    }
-                }
-            }
-        }
+                                username: { type: 'string', example: 'johndoe' },
+                            },
+                        },
+                    },
+                },
+            },
+        },
     }),
     (0, swagger_1.ApiResponse)({
         status: 404,
@@ -784,21 +801,23 @@ tslib_1.__decorate([
             properties: {
                 message: { type: 'string', example: 'Blog with ID 1 not found' },
                 error: { type: 'string', example: 'Not Found' },
-                statusCode: { type: 'number', example: 404 }
-            }
-        }
+                statusCode: { type: 'number', example: 404 },
+            },
+        },
     }),
     (0, swagger_1.ApiResponse)({ status: 401, description: 'Unauthorized' }),
+    (0, public_decorator_1.Public)(),
+    (0, common_1.Get)(':id'),
     tslib_1.__param(0, (0, common_1.Param)('id')),
     tslib_1.__metadata("design:type", Function),
     tslib_1.__metadata("design:paramtypes", [String]),
     tslib_1.__metadata("design:returntype", void 0)
-], BlogController.prototype, "findOne", null);
+], BlogController.prototype, "findOneById", null);
 tslib_1.__decorate([
     (0, common_1.Put)(':id'),
     (0, swagger_1.ApiOperation)({
         summary: 'Update a blog post',
-        description: 'Updates an existing blog post with the provided data'
+        description: 'Updates an existing blog post with the provided data',
     }),
     (0, swagger_1.ApiParam)({ name: 'id', description: 'Blog post ID', example: 1 }),
     (0, swagger_1.ApiBody)({ type: update_blog_dto_1.UpdateBlogDto }),
@@ -817,16 +836,16 @@ tslib_1.__decorate([
                         tag: {
                             type: 'array',
                             items: { type: 'string' },
-                            example: ['technology', 'programming']
+                            example: ['technology', 'programming'],
                         },
                         authorId: { type: 'number', example: 1 },
                         createdAt: { type: 'string', format: 'date-time' },
-                        updatedAt: { type: 'string', format: 'date-time' }
-                    }
+                        updatedAt: { type: 'string', format: 'date-time' },
+                    },
                 },
-                message: { type: 'string', example: 'Blog updated successfully' }
-            }
-        }
+                message: { type: 'string', example: 'Blog updated successfully' },
+            },
+        },
     }),
     (0, swagger_1.ApiResponse)({
         status: 404,
@@ -836,9 +855,9 @@ tslib_1.__decorate([
             properties: {
                 message: { type: 'string', example: 'Blog with ID 1 not found' },
                 error: { type: 'string', example: 'Not Found' },
-                statusCode: { type: 'number', example: 404 }
-            }
-        }
+                statusCode: { type: 'number', example: 404 },
+            },
+        },
     }),
     (0, swagger_1.ApiResponse)({ status: 401, description: 'Unauthorized' }),
     tslib_1.__param(0, (0, common_1.Param)('id')),
@@ -851,7 +870,7 @@ tslib_1.__decorate([
     (0, common_1.Delete)(':id'),
     (0, swagger_1.ApiOperation)({
         summary: 'Delete a blog post',
-        description: 'Deletes a blog post by its ID'
+        description: 'Deletes a blog post by its ID',
     }),
     (0, swagger_1.ApiParam)({ name: 'id', description: 'Blog post ID', example: 1 }),
     (0, swagger_1.ApiResponse)({
@@ -860,9 +879,9 @@ tslib_1.__decorate([
         schema: {
             type: 'object',
             properties: {
-                message: { type: 'string', example: 'Blog deleted successfully' }
-            }
-        }
+                message: { type: 'string', example: 'Blog deleted successfully' },
+            },
+        },
     }),
     (0, swagger_1.ApiResponse)({
         status: 404,
@@ -872,9 +891,9 @@ tslib_1.__decorate([
             properties: {
                 message: { type: 'string', example: 'Blog with ID 1 not found' },
                 error: { type: 'string', example: 'Not Found' },
-                statusCode: { type: 'number', example: 404 }
-            }
-        }
+                statusCode: { type: 'number', example: 404 },
+            },
+        },
     }),
     (0, swagger_1.ApiResponse)({ status: 401, description: 'Unauthorized' }),
     tslib_1.__param(0, (0, common_1.Param)('id')),
@@ -909,13 +928,15 @@ let BlogService = class BlogService {
         this.blogModel = blogModel;
     }
     async create(createBlogDto) {
+        const content = JSON.stringify(createBlogDto.content);
         return this.blogModel
             .create({
             ...createBlogDto,
+            content,
         })
             .then((blog) => {
             return {
-                data: blog,
+                data: blog.toJSON()?.id,
                 message: 'Blog created successfully',
             };
         });
@@ -965,9 +986,10 @@ let BlogService = class BlogService {
             limit,
         };
     }
-    async findOne(id) {
+    async findOne(slug) {
+        const isNumber = !isNaN(+slug);
         const blog = await this.blogModel.findOne({
-            where: { id },
+            where: isNumber ? { id: +slug } : { slug },
             include: [
                 {
                     model: user_model_1.User,
@@ -976,7 +998,7 @@ let BlogService = class BlogService {
             ],
         });
         if (!blog) {
-            throw new common_1.NotFoundException(`Blog with ID ${id} not found`);
+            throw new common_1.NotFoundException(`Blog with slug ${slug} not found`);
         }
         return {
             data: blog,
@@ -1024,7 +1046,7 @@ module.exports = require("sequelize");
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.SearchBlogDto = void 0;
 const tslib_1 = __webpack_require__(5);
-const class_validator_1 = __webpack_require__(16);
+const class_validator_1 = __webpack_require__(14);
 const swagger_1 = __webpack_require__(3);
 const class_transformer_1 = __webpack_require__(27);
 class SearchBlogDto {
@@ -1080,10 +1102,11 @@ module.exports = require("class-transformer");
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 
+var _a;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.CreateBlogDto = void 0;
 const tslib_1 = __webpack_require__(5);
-const class_validator_1 = __webpack_require__(16);
+const class_validator_1 = __webpack_require__(14);
 const swagger_1 = __webpack_require__(3);
 class CreateBlogDto {
 }
@@ -1093,7 +1116,7 @@ tslib_1.__decorate([
         description: 'The title of the blog post',
         example: 'My First Blog Post',
         minLength: 3,
-        maxLength: 100
+        maxLength: 100,
     }),
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
@@ -1105,24 +1128,49 @@ tslib_1.__decorate([
     (0, swagger_1.ApiProperty)({
         description: 'The content of the blog post',
         example: 'This is the content of my blog post...',
-        minLength: 10
+        minLength: 10,
     }),
-    (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)(),
-    (0, class_validator_1.MinLength)(10),
-    tslib_1.__metadata("design:type", String)
+    tslib_1.__metadata("design:type", typeof (_a = typeof Record !== "undefined" && Record) === "function" ? _a : Object)
 ], CreateBlogDto.prototype, "content", void 0);
 tslib_1.__decorate([
     (0, swagger_1.ApiProperty)({
         description: 'Tags for the blog post',
         example: ['technology', 'programming'],
-        type: [String]
+        type: [String],
     }),
     (0, class_validator_1.IsArray)(),
     (0, class_validator_1.ArrayMinSize)(1),
     (0, class_validator_1.IsString)({ each: true }),
     tslib_1.__metadata("design:type", Array)
 ], CreateBlogDto.prototype, "tag", void 0);
+tslib_1.__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Thumbnail of the blog post',
+        example: 'https://example.com/thumbnail.jpg',
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    tslib_1.__metadata("design:type", String)
+], CreateBlogDto.prototype, "thumbnail", void 0);
+tslib_1.__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Description of the blog post',
+        example: 'This is the description of my blog post...',
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    tslib_1.__metadata("design:type", String)
+], CreateBlogDto.prototype, "description", void 0);
+tslib_1.__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'Slug of the blog post',
+        example: 'my-first-blog-post',
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsNotEmpty)(),
+    tslib_1.__metadata("design:type", String)
+], CreateBlogDto.prototype, "slug", void 0);
 
 
 /***/ }),
@@ -1133,7 +1181,7 @@ tslib_1.__decorate([
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.UpdateBlogDto = void 0;
 const tslib_1 = __webpack_require__(5);
-const class_validator_1 = __webpack_require__(16);
+const class_validator_1 = __webpack_require__(14);
 const swagger_1 = __webpack_require__(3);
 class UpdateBlogDto {
 }
@@ -1444,7 +1492,17 @@ async function bootstrap() {
     const globalPrefix = '';
     app.setGlobalPrefix(globalPrefix);
     // Enable CORS
-    app.enableCors();
+    app.enableCors({
+        origin: [
+            'https://phutran.info.vn',
+            'https://www.phutran.info.vn',
+            'https://api.phutran.info.vn',
+            'http://localhost:4200',
+        ],
+        methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+        credentials: true,
+    });
     // Add this line to enable validation
     app.useGlobalPipes(new common_2.ValidationPipe({
         transform: true,
@@ -1454,7 +1512,7 @@ async function bootstrap() {
     // Swagger configuration
     const config = new swagger_1.DocumentBuilder()
         .setTitle('Phú Trần API')
-        .setDescription('The API documentation for Phú Trần\'s services')
+        .setDescription("The API documentation for Phú Trần's services")
         .setVersion('1.0')
         .addTag('auth', 'Authentication endpoints')
         .addTag('blogs', 'Blog management endpoints')
@@ -1465,7 +1523,8 @@ async function bootstrap() {
         name: 'Authorization',
         description: 'Enter JWT token',
         in: 'header',
-    }, 'access-token')
+    }, 'access-token' // This name should match the @ApiBearerAuth() decorator in your controllers
+    )
         .build();
     const document = swagger_1.SwaggerModule.createDocument(app, config);
     swagger_1.SwaggerModule.setup('api', app, document, {
