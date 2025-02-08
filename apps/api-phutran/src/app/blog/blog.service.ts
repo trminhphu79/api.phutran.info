@@ -15,13 +15,15 @@ export class BlogService {
   ) {}
 
   async create(createBlogDto: CreateBlogDto) {
+    const content = JSON.stringify(createBlogDto.content);
     return this.blogModel
       .create({
         ...createBlogDto,
+        content,
       })
       .then((blog) => {
         return {
-          data: blog,
+          data: blog.toJSON()?.id,
           message: 'Blog created successfully',
         };
       });
